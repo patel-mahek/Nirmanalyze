@@ -12,6 +12,7 @@ import {
     PieChart,
     Settings2,
     SquareTerminal,
+    MessageSquare,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -54,89 +55,112 @@ const data = {
     ],
     navMain: [
         {
-            title: "Playground",
-            url: "#",
+            title: "Dashboard",
+            url: "/dashboard",
+            icon: Settings2,
+            // items: [
+            //     {
+            //         title: "General",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Team",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Billing",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Limits",
+            //         url: "#",
+            //     },
+            // ],
+        },
+        {
+            title: "Projects",
+            url: "/projects",
             icon: SquareTerminal,
             isActive: true,
-            items: [
-                {
-                    title: "History",
-                    url: "#",
-                },
-                {
-                    title: "Starred",
-                    url: "#",
-                },
-                {
-                    title: "Settings",
-                    url: "#",
-                },
-            ],
+            // items: [
+            //     {
+            //         title: "History",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Starred",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Settings",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            title: "Models",
-            url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
+            title: "Tender Marketplace",
+            url: "/tender-marketplace",
+            icon: MessageSquare,
+            // items: [
+            //     {
+            //         title: "Genesis",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Explorer",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Quantum",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            title: "Documentation",
-            url: "#",
+            title: "Chatbot",
+            url: "/chatbot",
             icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
+            // items: [
+            //     {
+            //         title: "Introduction",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Get Started",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Tutorials",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Changelog",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            title: "Settings",
-            url: "#",
+            title: "Community",
+            url: "/community",
             icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
-            ],
+            // items: [
+            //     {
+            //         title: "General",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Team",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Billing",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Limits",
+            //         url: "#",
+            //     },
+            // ],
         },
     ],
     projects: [
@@ -166,7 +190,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
+                {/* <NavProjects projects={data.projects} /> */}
             </SidebarContent>
             <SidebarFooter>
                 {/* <NavUser user={data.user} /> */}
