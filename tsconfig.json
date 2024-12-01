@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/project-insights.jsx"
+    "components/project-insights.tsx"
   ],
   "exclude": [
     "node_modules"
