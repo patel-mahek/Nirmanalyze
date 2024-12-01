@@ -68,7 +68,7 @@ export default function ProjectReports() {
                 </TableBody>
             </Table>
 
-            <Pagination>
+            {/* <Pagination>
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious
@@ -93,7 +93,7 @@ export default function ProjectReports() {
                         />
                     </PaginationItem>
                 </PaginationContent>
-            </Pagination>
+            </Pagination> */}
         </div>
     )
 }
