@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import Link from "next/link"
 
 interface ProjectCardProps {
     imageUrl: string
@@ -47,7 +48,7 @@ export default function ProjectCard({
                     </div>
                     <Progress value={completionPercentage} className="mt-2" />
                 </div>
-                <Button className="w-full mt-4">View Project</Button>
+                <Button className="w-full mt-4"><Link href="/projects/123">View Project</Link></Button>
             </CardContent>
             {/* <CardFooter>
                 
