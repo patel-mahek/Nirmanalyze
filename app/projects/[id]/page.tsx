@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import ProjectDetails from "@/components/project-details"
 import ProjectPhases from "@/components/project-phases"
-import ProjectInsights from "@/components/project-insights"
+import ProjectInsights from "@/components/project-insights.jsx"
 import ProjectReports from "@/components/project-reports"
 import ProjectTeam from "@/components/project-team"
 import EditDetailsModal from "@/components/edit-details-modal"
