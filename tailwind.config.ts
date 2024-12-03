@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+const {
+	default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 const config: Config = {
 	darkMode: ["class"],
 	content: [
@@ -101,6 +105,14 @@ const config: Config = {
 						transform: 'translateX(calc(-100% - var(--gap)))'
 					}
 				},
+				aurora: {
+					from: {
+						backgroundPosition: "50% 50%, 50% 50%",
+					},
+					to: {
+						backgroundPosition: "350% 50%, 350% 50%",
+					},
+				},
 				appear: {
 					'0%': {
 						opacity: '0',
@@ -179,7 +191,8 @@ const config: Config = {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				appear: 'appear 0.6s forwards ease-out',
 				'appear-zoom': 'appear-zoom 0.6s forwards ease-out',
-				'pulse-hover': 'pulse-hover 6s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse-hover': 'pulse-hover 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				aurora: "aurora 60s linear infinite",
 			},
 			spacing: {
 				container: '1280px'
@@ -191,6 +204,20 @@ const config: Config = {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [require("tailwindcss-animate"),
+		addVariablesForColors
+	],
 };
+
+function addVariablesForColors({ addBase, theme }: any) {
+	let allColors = flattenColorPalette(theme("colors"));
+	let newVars = Object.fromEntries(
+		Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+	);
+
+	addBase({
+		":root": newVars,
+	});
+}
+
 export default config;
