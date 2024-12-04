@@ -17,76 +17,87 @@ import {
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from 'react'
 import ProjectCard from '@/components/ui/project-card'
+import { fetchAllProjects } from "@/utils/api";
+import { Project } from "@/interfaces/project";
 
-interface Project {
-    id: number
-    imageUrl: string
-    projectName: string
-    location: string
-    constructionType: string
-    startDate: string
-    completionPercentage: number
-}
+// const data = [
+//     {
+//         "id": 1,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Skyline Tower",
+//         "location": "New York City, NY",
+//         "constructionType": "Commercial",
+//         "startDate": "2023-06-15",
+//         "completionPercentage": 75
+//     },
+//     {
+//         "id": 2,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Green Valley Residences",
+//         "location": "Austin, TX",
+//         "constructionType": "Residential",
+//         "startDate": "2023-04-01",
+//         "completionPercentage": 40
+//     },
+//     {
+//         "id": 3,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Riverside Mall",
+//         "location": "Chicago, IL",
+//         "constructionType": "Commercial",
+//         "startDate": "2023-07-30",
+//         "completionPercentage": 20
+//     },
+//     {
+//         "id": 4,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Harbor Bridge",
+//         "location": "Seattle, WA",
+//         "constructionType": "Infrastructure",
+//         "startDate": "2023-03-10",
+//         "completionPercentage": 60
+//     },
+//     {
+//         "id": 5,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Skyline Tower",
+//         "location": "New York City, NY",
+//         "constructionType": "Commercial",
+//         "startDate": "2023-06-15",
+//         "completionPercentage": 75
+//     },
+//     {
+//         "id": 6,
+//         "imageUrl": "/placeholder.svg?height=200&width=300",
+//         "projectName": "Green Valley Residences",
+//         "location": "Austin, TX",
+//         "constructionType": "Residential",
+//         "startDate": "2023-04-01",
+//         "completionPercentage": 40
+//     },
+// ]
 
-const data = [
-    {
-        "id": 1,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Skyline Tower",
-        "location": "New York City, NY",
-        "constructionType": "Commercial",
-        "startDate": "2023-06-15",
-        "completionPercentage": 75
-    },
-    {
-        "id": 2,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Green Valley Residences",
-        "location": "Austin, TX",
-        "constructionType": "Residential",
-        "startDate": "2023-04-01",
-        "completionPercentage": 40
-    },
-    {
-        "id": 3,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Riverside Mall",
-        "location": "Chicago, IL",
-        "constructionType": "Commercial",
-        "startDate": "2023-07-30",
-        "completionPercentage": 20
-    },
-    {
-        "id": 4,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Harbor Bridge",
-        "location": "Seattle, WA",
-        "constructionType": "Infrastructure",
-        "startDate": "2023-03-10",
-        "completionPercentage": 60
-    },
-    {
-        "id": 5,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Skyline Tower",
-        "location": "New York City, NY",
-        "constructionType": "Commercial",
-        "startDate": "2023-06-15",
-        "completionPercentage": 75
-    },
-    {
-        "id": 6,
-        "imageUrl": "/placeholder.svg?height=200&width=300",
-        "projectName": "Green Valley Residences",
-        "location": "Austin, TX",
-        "constructionType": "Residential",
-        "startDate": "2023-04-01",
-        "completionPercentage": 40
-    },
-]
+const Projects: React.FC = () => {
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true)
 
-export default function Projects() {
-    const [projects, setProjects] = useState<Project[]>(data)
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const data = await fetchAllProjects();
+                setProjects(data);
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
+
+
+    if (loading) return <p>Loading...</p>;
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -116,13 +127,13 @@ export default function Projects() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {projects.map((project) => (
                                 <ProjectCard
-                                    key={project.id}
-                                    imageUrl={project.imageUrl}
+                                    key={project.projectId}
+                                    imageUrl={project.main_image}
                                     projectName={project.projectName}
-                                    location={project.location}
-                                    constructionType={project.constructionType}
-                                    startDate={project.startDate}
-                                    completionPercentage={project.completionPercentage}
+                                    location={project.details.location}
+                                    constructionType={project.type}
+                                    startDate={project.details.startDate}
+                                    completionPercentage={project.progress.percentage}
                                 />
                             ))}
                         </div>
@@ -133,3 +144,5 @@ export default function Projects() {
         </SidebarProvider>
     )
 }
+
+export default Projects;

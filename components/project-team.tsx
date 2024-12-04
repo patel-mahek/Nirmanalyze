@@ -5,21 +5,20 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { TeamMember } from "@/interfaces/project"
+// const teamMembers = [
+//   { id: 1, name: 'John Doe', role: 'Project Manager', avatar: '/placeholder.svg?height=50&width=50', email: 'john.doe@example.com', phone: '+1 234 567 890' },
+//   { id: 2, name: 'Jane Smith', role: 'Lead Engineer', avatar: '/placeholder.svg?height=50&width=50', email: 'jane.smith@example.com', phone: '+1 234 567 891' },
+//   { id: 3, name: 'Mike Johnson', role: 'Architect', avatar: '/placeholder.svg?height=50&width=50', email: 'mike.johnson@example.com', phone: '+1 234 567 892' },
+//   { id: 4, name: 'Sarah Brown', role: 'Environmental Specialist', avatar: '/placeholder.svg?height=50&width=50', email: 'sarah.brown@example.com', phone: '+1 234 567 893' },
+//   { id: 5, name: 'Tom Wilson', role: 'Safety Officer', avatar: '/placeholder.svg?height=50&width=50', email: 'tom.wilson@example.com', phone: '+1 234 567 894' }
+// ]
 
-const teamMembers = [
-  { id: 1, name: 'John Doe', role: 'Project Manager', avatar: '/placeholder.svg?height=50&width=50', email: 'john.doe@example.com', phone: '+1 234 567 890' },
-  { id: 2, name: 'Jane Smith', role: 'Lead Engineer', avatar: '/placeholder.svg?height=50&width=50', email: 'jane.smith@example.com', phone: '+1 234 567 891' },
-  { id: 3, name: 'Mike Johnson', role: 'Architect', avatar: '/placeholder.svg?height=50&width=50', email: 'mike.johnson@example.com', phone: '+1 234 567 892' },
-  { id: 4, name: 'Sarah Brown', role: 'Environmental Specialist', avatar: '/placeholder.svg?height=50&width=50', email: 'sarah.brown@example.com', phone: '+1 234 567 893' },
-  { id: 5, name: 'Tom Wilson', role: 'Safety Officer', avatar: '/placeholder.svg?height=50&width=50', email: 'tom.wilson@example.com', phone: '+1 234 567 894' },
-  // Add more team members as needed
-]
-
-export default function ProjectTeam() {
+export default function ProjectTeam({ teamMembers }: { teamMembers: TeamMember[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {teamMembers.map((member) => (
-        <HoverCard key={member.id}>
+        <HoverCard key={member.name}>
           <HoverCardTrigger asChild>
             <Card className="cursor-pointer">
               <CardHeader>
@@ -48,7 +47,7 @@ export default function ProjectTeam() {
                 <div className="flex items-center pt-2">
                   <span className="text-xs text-muted-foreground">
                     {member.email}<br />
-                    {member.phone}
+                    {member.contact}
                   </span>
                 </div>
               </div>

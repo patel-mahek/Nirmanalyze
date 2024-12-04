@@ -5,20 +5,21 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { ProjectDetailsType } from "@/interfaces/project"
 
-export default function ProjectDetails() {
-    const details = {
-        "Name of Project": "NorthConnex Motorway",
-        Location: "Western express highway",
-        "Expressway...": "Flyover",
-        "Builder Name": "Neelkanth Group of Builders",
-        "Road Stretch": "Ghatkopar-Dadar",
-        "Start Date": "07/03/2023",
-        "Estimated End Date": "09/08/2025",
-        "Tender ID No.": "123456",
-        "Total Length": "100 km",
-        Landmark: "Near Laxman Yadapav",
-    }
+export default function ProjectDetails({ details }: { details: ProjectDetailsType }) {
+    // const details = {
+    //     "Name of Project": "NorthConnex Motorway",
+    //     Location: "Western express highway",
+    //     "Expressway...": "Flyover",
+    //     "Builder Name": "Neelkanth Group of Builders",
+    //     "Road Stretch": "Ghatkopar-Dadar",
+    //     "Start Date": "07/03/2023",
+    //     "Estimated End Date": "09/08/2025",
+    //     "Tender ID No.": "123456",
+    //     "Total Length": "100 km",
+    //     Landmark: "Near Laxman Yadapav",
+    // }
 
     return (
         <Card>

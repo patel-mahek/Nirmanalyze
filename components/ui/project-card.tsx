@@ -48,7 +48,10 @@ export default function ProjectCard({
                     </div>
                     <Progress value={completionPercentage} className="mt-2" />
                 </div>
-                <Button className="w-full mt-4"><Link href="/projects/123">View Project</Link></Button>
+                <Link href={`/projects/${encodeURIComponent(projectName)}`}>
+                    <Button className="w-full mt-4"> View Project</Button>
+                </Link>
+
             </CardContent>
             {/* <CardFooter>
                 
