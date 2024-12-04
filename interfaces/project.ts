@@ -50,8 +50,12 @@ export interface Activity {
 }
 
 export interface SubActivity {
-    description: string;
-    status: number;
+    subactivity_description: string;
+    subactivity_status: number;
+    activity_status: number;
+    phase_status: number;
+    phase_comments: string;
+    activity_comments: string;
     showWarning: boolean;
     warningDescription: string;
     date: string;

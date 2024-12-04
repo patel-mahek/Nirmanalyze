@@ -19,6 +19,8 @@ import { useEffect, useState } from 'react'
 import ProjectCard from '@/components/ui/project-card'
 import { fetchAllProjects } from "@/utils/api";
 import { Project } from "@/interfaces/project";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // const data = [
 //     {
@@ -121,7 +123,7 @@ const Projects: React.FC = () => {
                         </Breadcrumb>
                     </div>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="container mx-auto px-4 py-8">
                         <h1 className="text-3xl font-bold mb-8">Our Projects</h1>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -137,11 +139,32 @@ const Projects: React.FC = () => {
                                 />
                             ))}
                         </div>
+                    </div> */}
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-3xl font-bold">Our Projects</h1>
+                        <Link href="/projects/add-project">
+                            <Button>Add Project</Button>
+                        </Link>
                     </div>
-                    {/* <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {projects.map((project) => (
+                            <ProjectCard
+                                key={project.projectId}
+                                imageUrl={project.main_image}
+                                projectName={project.projectName}
+                                location={project.details.location}
+                                constructionType={project.type}
+                                startDate={project.details.startDate}
+                                completionPercentage={project.progress.percentage}
+                            />
+                        ))}
+                    </div>
                 </div>
+                {/* <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
+                {/* </div> */}
             </SidebarInset>
-        </SidebarProvider>
+        </SidebarProvider >
     )
 }
 

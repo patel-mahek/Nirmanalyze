@@ -7,80 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Progress } from "@/components/ui/progress"
 import { ProjectProgress, Phase, Activity, SubActivity, Image } from '@/interfaces/project'
 
-// type ActivitySection = {
-//     title: string
-//     images: string[]
-//     description: string
-//     date: string
-//     location: string
-// }
-
-// type Activity = {
-//     name: string
-//     completion: number
-//     sections: ActivitySection[]
-// }
-
-// type Phase = {
-//     name: string
-//     startDate: string
-//     endDate: string
-//     progress: number
-//     activities: Activity[]
-// }
-
-// const phases: Phase[] = [
-//     {
-//         name: "Planning",
-//         startDate: "01/01/2023",
-//         endDate: "28/02/2023",
-//         progress: 100,
-//         activities: [
-//             {
-//                 name: "Site Survey",
-//                 completion: 100,
-//                 sections: [
-//                     {
-//                         title: "Initial Survey",
-//                         images: ["/placeholder.svg?height=300&width=400", "/placeholder.svg?height=300&width=400"],
-//                         description: "Conducted initial site survey to assess terrain and existing structures.",
-//                         date: "05/01/2023",
-//                         location: "Project Site - North Section"
-//                     },
-//                     {
-//                         title: "Detailed Mapping",
-//                         images: ["/placeholder.svg?height=300&width=400"],
-//                         description: "Created detailed topographical maps of the entire project area.",
-//                         date: "10/01/2023",
-//                         location: "Project Site - Full Area"
-//                     }
-//                 ]
-//             },
-//             {
-//                 name: "Environmental Assessment",
-//                 completion: 100,
-//                 sections: [
-//                     {
-//                         title: "Flora and Fauna Study",
-//                         images: ["/placeholder.svg?height=300&width=400", "/placeholder.svg?height=300&width=400"],
-//                         description: "Catalogued local plant and animal species in the project area.",
-//                         date: "20/01/2023",
-//                         location: "Project Site and Surrounding Areas"
-//                     },
-//                     {
-//                         title: "Environmental Impact Report",
-//                         images: ["/placeholder.svg?height=300&width=400"],
-//                         description: "Compiled comprehensive environmental impact report based on studies.",
-//                         date: "30/01/2023",
-//                         location: "Environmental Assessment Office"
-//                     }
-//                 ]
-//             }
-//         ]
-//     },
-//     // Add more phases as needed
-// ]
-
 function RadialProgressCard({ phase, onClick }: { phase: Phase; onClick: () => void }) {
     return (
         <Card className="cursor-pointer hover:bg-accent" onClick={onClick}>
@@ -167,7 +93,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
                                         <img key={imgIndex} src={image.url} alt={`${section.date} - Image ${imgIndex + 1}`} className="w-full h-48 rounded-md object-cover" />
                                     ))}
                                 </div>
-                                <p className="text-sm">{section.description}</p>
+                                <p className="text-sm">{section.subactivity_description}</p>
                                 <div className="flex flex-wrap gap-4 text-sm">
                                     {/* <div>
                                         <span className="font-medium">Subactivity Status:</span> {section.subActivityStatus}% Complete
