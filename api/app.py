@@ -16,14 +16,17 @@ import logging
 from bson import ObjectId
 import cloudinary.uploader
 import os
+from dotenv import load_dotenv
+load_dotenv()  # take environment variables from .env.
 from typing import Optional
 
 logging.basicConfig(level=logging.INFO)
 origins = ["http://localhost:3000"]
 app = FastAPI()
 
-username = "Jeesha"
-password = "Khwaaish@09"
+username = os.environ.get("MONGO_USERNAME")
+print(username)
+password = os.environ.get("MONGO_PASSWORD")
 encoded_username = quote_plus(username)
 encoded_password = quote_plus(password)
 MONGO_URL = os.getenv("MONGO_URL", f"mongodb+srv://{encoded_username}:{encoded_password}@cluster0.mcrhr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -32,10 +35,15 @@ client = AsyncIOMotorClient(MONGO_URL)
 db = client.get_database("backend")
 projects_collection = db["projects"]
 
+# cloudinary.config(
+#     cloud_name="dpo5eucgd",
+#     api_key="839315133223158",
+#     api_secret="TytvTg637mczR1W5SAvSefRZxPM",
+# )
 cloudinary.config(
-    cloud_name="dpo5eucgd",
-    api_key="839315133223158",
-    api_secret="TytvTg637mczR1W5SAvSefRZxPM",
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
 )
 
 app.add_middleware(

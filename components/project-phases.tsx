@@ -60,6 +60,7 @@ function RadialProgressCard({ phase, onClick }: { phase: Phase; onClick: () => v
 }
 
 function ActivityCard({ activity }: { activity: Activity }) {
+    console.log(activity.subActivities[0])
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -72,7 +73,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <img src={activity.subActivities[0].images[0]?.url} alt={activity.activityName} className="w-full h-48 rounded-md object-cover" />
+                            <img src={activity?.subActivities[0]?.images[0]?.url} alt={activity.activityName} className="w-full h-48 rounded-md object-cover" />
                             <Progress value={activity.status} className="w-full" />
                             <p className="text-xs text-muted-foreground">{activity.subActivities.at(-1)?.date}</p>
                         </div>
@@ -173,7 +174,6 @@ export default function ProjectPhases({ progress }: { progress: ProjectProgress 
     const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null)
     const phases = progress.phases
     const progressPercentage = progress.percentage
-
     return (
         <div className="space-y-4">
             {selectedPhase ? (

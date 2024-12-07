@@ -1,3 +1,6 @@
+// "use client"
+
+// import { useState } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider"
@@ -10,6 +13,12 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import { Toaster } from "@/components/ui/toaster";
+
+// import { createContext } from "react";
+// import { Project } from "@/interfaces/project";
+import { ProjectProvider } from "./ProjectContext";
+// export const ProjectContextData = createContext({} as { localProject: Project, setLocalProject: React.Dispatch<React.SetStateAction<Project>> });
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,23 +40,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <>
 
       <ClerkProvider>
-
         <html suppressHydrationWarning lang="en">
 
           <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange>
+            <ProjectProvider>
 
-              {children}
-              <Toaster />
-            </ThemeProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange>
+
+                {children}
+                <Toaster />
+              </ThemeProvider>
+            </ProjectProvider>
           </body>
 
         </html>

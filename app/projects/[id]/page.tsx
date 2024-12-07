@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 // import { useRouter } from "next/router";
 import { ArrowLeft } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
@@ -23,6 +23,11 @@ import GenerateReportModal from "@/components/generate-report-modal"
 import Link from 'next/link';
 import { notFound } from "next/navigation";
 import { Project } from "../../../interfaces/project";
+import { useProject } from '@/app/ProjectContext';
+// import { ProjectContextData } from "../../layout";
+// import { createContext } from "react";
+
+// export const ProjectContextData = createContext({} as Project);
 
 const ProjectPage = () => {
     const [project, setProject] = useState<Project | null>(null);
@@ -31,7 +36,8 @@ const ProjectPage = () => {
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [addImageModalOpen, setAddImageModalOpen] = useState(false)
     const [generateReportModalOpen, setGenerateReportModalOpen] = useState(false)
-
+    const { localProject, setLocalProject } = useProject();
+    console.log("Local Project", localProject)
     // const { id } = router.query; // Get the project name (id) from the URL
     useEffect(() => {
         // Extract the project name from the URL
@@ -40,13 +46,15 @@ const ProjectPage = () => {
 
         async function fetchProjectByName(name: string) {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/project?project_name=${name}`);
+                const response = await fetch(`${process.env.
+                    NEXT_PUBLIC_FAST_API_URL}/project?project_name=${name}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch project");
                 }
                 const data: Project = await response.json();
                 console.log(data)
                 setProject(data);
+                setLocalProject(data);
             } catch (error) {
                 console.error("Error fetching project:", error);
                 setProject(null);
@@ -65,20 +73,22 @@ const ProjectPage = () => {
 
 
     return (
-        <div className="container mx-auto p-4 space-y-6">
-            {/* Header Section */}
-            <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" className="rounded-full">
-                            <Link href="/projects"><ArrowLeft className="h-4 w-4" /></Link>
-                        </Button>
-                        <h1 className="text-2xl font-bold">{project.details.nameOfProject}</h1>
-                        <Badge>Active</Badge>
+        <>
+            {/* {localProject && <ProjectContextData.Provider value={localProject}> */}
+            <div className="container mx-auto p-4 space-y-6">
+                {/* Header Section */}
+                <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="icon" className="rounded-full">
+                                <Link href="/projects"><ArrowLeft className="h-4 w-4" /></Link>
+                            </Button>
+                            <h1 className="text-2xl font-bold">{project.details.nameOfProject}</h1>
+                            <Badge>Active</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{project.details.location}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{project.details.location}</p>
-                </div>
-                <DropdownMenu>
+                    {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline">More Actions</Button>
                     </DropdownMenuTrigger>
@@ -87,39 +97,45 @@ const ProjectPage = () => {
                         <DropdownMenuItem onSelect={() => setAddImageModalOpen(true)}>Add Image</DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => setGenerateReportModalOpen(true)}>Generate Report</DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
+                    <Link href="/projects/new-report">
+                        <Button>Generate a Report</Button>
+                    </Link>
+                </div>
+
+                {/* Navigation Tabs */}
+                <Tabs defaultValue="details" className="w-full">
+                    <TabsList className="grid w-full grid-cols-5">
+                        <TabsTrigger value="details">Details</TabsTrigger>
+                        <TabsTrigger value="phases">Phases</TabsTrigger>
+                        <TabsTrigger value="insights">Insights</TabsTrigger>
+                        <TabsTrigger value="reports">Reports</TabsTrigger>
+                        <TabsTrigger value="team">Team</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="details">
+                        <ProjectDetails details={project.details} name={project.projectName} />
+                    </TabsContent>
+                    <TabsContent value="phases">
+                        <ProjectPhases progress={project.progress} />
+                    </TabsContent>
+                    <TabsContent value="insights">
+                        <ProjectInsights />
+                    </TabsContent>
+                    <TabsContent value="reports">
+                        <ProjectReports />
+                    </TabsContent>
+                    <TabsContent value="team">
+                        <ProjectTeam teamMembers={project.team} />
+                    </TabsContent>
+                </Tabs>
+
+                <EditDetailsModal open={editModalOpen} onOpenChange={setEditModalOpen} />
+                <AddImageModal open={addImageModalOpen} onOpenChange={setAddImageModalOpen} />
+                <GenerateReportModal open={generateReportModalOpen} onOpenChange={setGenerateReportModalOpen} />
             </div>
+            {/* </ProjectContextData.Provider>} */}
+        </>
 
-            {/* Navigation Tabs */}
-            <Tabs defaultValue="details" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="details">Details</TabsTrigger>
-                    <TabsTrigger value="phases">Phases</TabsTrigger>
-                    <TabsTrigger value="insights">Insights</TabsTrigger>
-                    <TabsTrigger value="reports">Reports</TabsTrigger>
-                    <TabsTrigger value="team">Team</TabsTrigger>
-                </TabsList>
-                <TabsContent value="details">
-                    <ProjectDetails details={project.details} />
-                </TabsContent>
-                <TabsContent value="phases">
-                    <ProjectPhases progress={project.progress} />
-                </TabsContent>
-                <TabsContent value="insights">
-                    <ProjectInsights />
-                </TabsContent>
-                <TabsContent value="reports">
-                    <ProjectReports />
-                </TabsContent>
-                <TabsContent value="team">
-                    <ProjectTeam teamMembers={project.team} />
-                </TabsContent>
-            </Tabs>
-
-            <EditDetailsModal open={editModalOpen} onOpenChange={setEditModalOpen} />
-            <AddImageModal open={addImageModalOpen} onOpenChange={setAddImageModalOpen} />
-            <GenerateReportModal open={generateReportModalOpen} onOpenChange={setGenerateReportModalOpen} />
-        </div>
     )
 }
 

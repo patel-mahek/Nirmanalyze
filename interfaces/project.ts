@@ -1,5 +1,6 @@
 // interfaces/project.ts
 export interface Project {
+    _id: string;
     projectName: string;
     projectId: string;
     type: string;
@@ -59,10 +60,10 @@ export interface SubActivity {
     showWarning: boolean;
     warningDescription: string;
     date: string;
-    startLatitude?: number;
-    startLongitude?: number;
-    endLatitude?: number;
-    endLongitude?: number;
+    startLatitude: number;
+    startLongitude: number;
+    endLatitude: number;
+    endLongitude: number;
     images: Image[];
 }
 

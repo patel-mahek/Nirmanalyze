@@ -82,7 +82,8 @@ export default function AddProjectPage() {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/projects/add-project', {
+            const response = await fetch(`${process.env.
+                NEXT_PUBLIC_FAST_API_URL}/projects/add-project`, {
                 method: 'POST',
                 body: formData,
             })
@@ -270,7 +271,7 @@ export default function AddProjectPage() {
                     </div>
                 </div>
                 <div className="flex justify-end space-x-4">
-                    <Button type="button" variant="outline" onClick={() => router.push('/')}>Cancel</Button>
+                    <Button type="button" variant="outline" onClick={() => router.push('/projects')}>Cancel</Button>
                     <Button type="submit">Save Project</Button>
                 </div>
             </form>
