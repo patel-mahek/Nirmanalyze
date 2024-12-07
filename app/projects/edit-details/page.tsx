@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +14,7 @@ export default function EditDetails() {
     const { toast } = useToast()
     const searchParams = useSearchParams()
     const projectName = searchParams.get('projectName')
-    const pathParts = window.location.pathname.split("/");
+    // const pathParts = window.location.pathname.split("/");
     // console.log(pathParts)
     // const projectName = decodeURIComponent(pathParts[pathParts.length - 1]);
     const { localProject, setLocalProject } = useProject()
@@ -66,36 +67,39 @@ export default function EditDetails() {
     }
 
     return (
-        <div className="container mx-auto p-4">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Edit Project Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form className="space-y-4">
-                        {Object.entries(details).map(([key, value]) => (
-                            <div key={key} className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor={key} className="text-right">
-                                    {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                                </Label>
-                                <Input
-                                    id={key}
-                                    name={key}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    className="col-span-3"
-                                />
+        <Suspense>
+            <div className="container mx-auto p-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Edit Project Details</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form className="space-y-4">
+                            {Object.entries(details).map(([key, value]) => (
+                                <div key={key} className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor={key} className="text-right">
+                                        {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                                    </Label>
+                                    <Input
+                                        id={key}
+                                        name={key}
+                                        value={value}
+                                        onChange={handleInputChange}
+                                        className="col-span-3"
+                                    />
+                                </div>
+                            ))}
+                            <div className="flex justify-end space-x-2">
+                                <Button type="button" variant="secondary" onClick={() => router.push(`/projects/${projectName}`)}>Cancel</Button>
+                                <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
+                                <Button type="button" onClick={handleSave}>Save</Button>
                             </div>
-                        ))}
-                        <div className="flex justify-end space-x-2">
-                            <Button type="button" variant="secondary" onClick={() => router.push(`/projects/${projectName}`)}>Cancel</Button>
-                            <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
-                            <Button type="button" onClick={handleSave}>Save</Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
-        </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+        </Suspense>
+
     )
 }
 
