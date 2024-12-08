@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/pagination"
 import { Button } from "@/components/ui/button"
 import { FileText } from 'lucide-react'
-
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
 const reportsData = [
     { id: 1, name: 'Monthly Progress Report', description: 'Overview of project progress for the month', generatedBy: 'John Doe', link: '#', date: '2023-11-01' },
     { id: 2, name: 'Budget Analysis', description: 'Detailed breakdown of project expenses', generatedBy: 'Jane Smith', link: '#', date: '2023-10-15' },
@@ -39,6 +40,17 @@ export default function ProjectReports() {
 
     return (
         <div className="space-y-4">
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Report</CardTitle>
+                    <CardDescription>
+                        View historical reports of the project
+                    </CardDescription>
+                </div>
+                <Link href="/projects/new-report">
+                    <Button>Generate a Report</Button>
+                </Link>
+            </CardHeader>
             <Table>
                 <TableHeader>
                     <TableRow>

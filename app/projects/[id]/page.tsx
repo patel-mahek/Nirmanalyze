@@ -37,13 +37,15 @@ const ProjectPage = () => {
     const [addImageModalOpen, setAddImageModalOpen] = useState(false)
     const [generateReportModalOpen, setGenerateReportModalOpen] = useState(false)
     const { localProject, setLocalProject } = useProject();
+    const [project_Name, setProjectName] = useState("")
     console.log("Local Project", localProject)
     // const { id } = router.query; // Get the project name (id) from the URL
     useEffect(() => {
         // Extract the project name from the URL
         const pathParts = window.location.pathname.split("/");
         const projectName = decodeURIComponent(pathParts[pathParts.length - 1]);
-
+        setProjectName(projectName)
+        console.log("project_Name", project_Name)
         async function fetchProjectByName(name: string) {
             try {
                 const response = await fetch(`${process.env.
@@ -98,8 +100,8 @@ const ProjectPage = () => {
                         <DropdownMenuItem onSelect={() => setGenerateReportModalOpen(true)}>Generate Report</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu> */}
-                    <Link href="/projects/new-report">
-                        <Button>Generate a Report</Button>
+                    <Link href={`/projects/send-model?projectName=${encodeURIComponent(project_Name)}`}>
+                        <Button>Analyze New Images</Button>
                     </Link>
                 </div>
 

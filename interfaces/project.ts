@@ -51,24 +51,27 @@ export interface Activity {
 }
 
 export interface SubActivity {
-    subactivity_description: string;
-    subactivity_status: number;
-    activity_status: number;
-    phase_status: number;
-    phase_comments: string;
-    activity_comments: string;
-    showWarning: boolean;
-    warningDescription: string;
+    subactivity_description_reasoning: string;
+    activity_comments_reasoning: string;
+    activity_status_impact: number;
+    additional_comments: string[];
+    phase_comments_reasoning: number;
+    phase_status_impact: number;
+    predicted_activity_name: string;
+    predicted_phase_name: string;
+    progress_status_impact: number;
+    subactivity_status_impact: number;
+    warningDescription_conflicts: string;
+    isValid_userDescription: boolean;
+    isValid_userDescription_reasoning: string;
     date: string;
     startLatitude: number;
     startLongitude: number;
     endLatitude: number;
     endLongitude: number;
-    images: Image[];
-}
-
-export interface Image {
-    url: string;
+    images: string[];
+    userDescription: string;
+    last_image_url: string;
 }
 
 export interface TeamMember {
