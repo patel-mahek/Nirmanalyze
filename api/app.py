@@ -16,6 +16,9 @@ import logging
 from bson import ObjectId
 import cloudinary.uploader
 import os
+from pydantic import BaseModel
+from typing import List, Union
+from datetime import datetime
 from dotenv import load_dotenv
 import google.generativeai as genai
 from google.ai.generativelanguage_v1beta.types import content
@@ -147,48 +150,6 @@ async def update_project_details(
     updated_project["_id"] = str(updated_project["_id"])
 
     return updated_project
-
-@app.post("/project/progress")
-async def save_progress(
-    project_name: str = Query(..., description="Name of the project"),
-    phase_name: str = Query(..., description="Name of the phase"),
-    activity_name: str = Query(..., description="Name of the activities"),
-    progress_data: dict = Body(..., description="The progress data to be appended")
-):
-    # Find the project
-    project = await projects_collection.find_one({"projectName": project_name})
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-
-    # Locate the phase and activities indices
-    for phase_idx, phase in enumerate(project["progress"]["phases"]):
-        if phase["phaseName"] == phase_name:
-            for activity_idx, activities in enumerate(phase["activities"]):
-                if activities["activityName"] == activity_name:
-                    # Append to the subActivities array in the database
-                    filter_query = {
-                        "projectName": project_name,
-                        f"progress.phases.{phase_idx}.activities.{activity_idx}.activityName": activity_name
-                    }
-                    update_query = {
-                        "$push": {
-                            f"progress.phases.{phase_idx}.activities.{activity_idx}.subActivities": progress_data
-                        }
-                    }
-                    update_result = await projects_collection.update_one(filter_query, update_query)
-
-                    # Check if the update was successful
-                    if update_result.modified_count == 0:
-                        raise HTTPException(
-                            status_code=400, detail="Failed to append progress data"
-                        )
-
-                    # Return the updated project
-                    updated_project = await projects_collection.find_one({"projectName": project_name})
-                    updated_project["_id"] = str(updated_project["_id"])  # Serialize ObjectId
-                    return updated_project
-
-    raise HTTPException(status_code=404, detail="Phase or activities not found")
 
 @app.post("/projects/add-project")
 async def add_project(
@@ -775,3 +736,78 @@ async def send_model(
     # Step 7: Return the combined response
     # return {"message": "Data processed and response generated", "data": final_response}
     return final_response
+
+
+# Request body model
+class SaveProgressRequest(BaseModel):
+    activity_comments_reasoning: str
+    activity_status_impact: int
+    additional_comments: List[str]
+    phase_comments_reasoning: Union[int, str]
+    phase_status_impact: int
+    predicted_activity_name: str
+    predicted_phase_name: str
+    progress_status_impact: int
+    subactivity_description_reasoning: str
+    subactivity_status_impact: int
+    warningDescription_conflicts: str
+    isValid_userDescription: bool
+    isValid_userDescription_reasoning: str
+    startLatitude: float
+    startLongitude: float
+    endLatitude: float
+    endLongitude: float
+    userDescription: str  # Updated key
+    images: List[str]
+    last_image_url: str
+    roadlength: int
+    date: str
+
+@app.post("/save-progress")
+async def save_progress(
+    project_name: str = Query(..., description="Name of the project"),
+    data: SaveProgressRequest = Body(..., description="Progress data to save")
+):
+    # Step 1: Query the project by name
+    project = await projects_collection.find_one({"projectName": project_name})
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    # Step 2: Find the phase using predicted_phase_name
+    progress = project.get("progress", {})
+    phases = progress.get("phases", [])
+    phase = next((p for p in phases if p.get("phaseName") == data.predicted_phase_name), None)
+    if not phase:
+        raise HTTPException(status_code=404, detail="Phase not found")
+
+    # Step 3: Find the activity using predicted_activity_name
+    activities = phase.get("activities", [])
+    activity = next((a for a in activities if a.get("activityName") == data.predicted_activity_name), None)
+    if not activity:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    # Step 4: Append the entire request body to the subActivities array
+    sub_activities = activity.setdefault("subActivities", [])
+    sub_activities.append(data.dict())
+
+    # Step 5: Update the project values
+    # Update progress percentage
+    progress["percentage"] = data.progress_status_impact
+
+    # Update phase status
+    phase["status"] = data.phase_status_impact
+
+    # Update activity status
+    activity["status"] = data.activity_status_impact
+
+    # Step 6: Save the updated project back to MongoDB
+    try:
+        result = await projects_collection.update_one(
+            {"_id": project["_id"]}, {"$set": {"progress": progress}}
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=500, detail="Failed to save progress")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database update failed: {str(e)}")
+
+    return {"message": "Progress saved successfully", "updated_progress": progress}

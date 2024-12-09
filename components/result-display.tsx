@@ -14,19 +14,19 @@ interface ResultDisplayProps {
 }
 
 export function ResultDisplay({ result, onRetry, onSave, formData }: ResultDisplayProps) {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0)
+    // const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-    const handleNextImage = () => {
-        setCurrentImageIndex((prevIndex) =>
-            prevIndex === result.images.length - 1 ? 0 : prevIndex + 1
-        )
-    }
+    // const handleNextImage = () => {
+    //     setCurrentImageIndex((prevIndex) =>
+    //         prevIndex === result.images.length - 1 ? 0 : prevIndex + 1
+    //     )
+    // }
 
-    const handlePrevImage = () => {
-        setCurrentImageIndex((prevIndex) =>
-            prevIndex === 0 ? result.images.length - 1 : prevIndex - 1
-        )
-    }
+    // const handlePrevImage = () => {
+    //     setCurrentImageIndex((prevIndex) =>
+    //         prevIndex === 0 ? result.images.length - 1 : prevIndex - 1
+    //     )
+    // }
 
     return (
         <div className="space-y-8">

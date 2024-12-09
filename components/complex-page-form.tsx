@@ -8,8 +8,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ResultDisplay } from '@/components/result-display'
+import { useToast } from "@/hooks/use-toast"
 
 export function ComplexPageForm() {
+    const { toast } = useToast()
     const router = useRouter()
     const searchParams = useSearchParams()
     const projectName = searchParams.get('projectName')
@@ -60,6 +62,7 @@ export function ComplexPageForm() {
             })
             const result = await response.json()
             setResult(result)
+            console.log(result)
         } catch (error) {
             console.error('Error:', error)
         } finally {
@@ -72,17 +75,61 @@ export function ComplexPageForm() {
     }
 
     const handleSave = async () => {
+        // try {
+        //     const response = await fetch(`${process.env.
+        //         NEXT_PUBLIC_FAST_API_URL}/save-progress?project_name=${encodeURIComponent(projectName || '')}`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(result),
+        //     })
+        //     if (response.ok) {
+        //         router.push(`/projects/${encodeURIComponent(projectName || '')}`)
+        //     } else {
+        //         console.error('Error saving progress:', await response.text())
+        //     }
+        // } catch (error) {
+        //     console.error('Error saving progress:', error)
+        // }
+
         try {
-            await fetch(`/api/save-progress?project_name=MyProject`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(result),
+            // Log result for debugging
+            console.log('Sending data:', result);
+
+            // Send the request to the backend
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_FAST_API_URL}/save-progress?project_name=${encodeURIComponent(projectName || '')}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(result), // Ensure result matches the backend model
+                }
+            );
+
+            // Check the response
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Server Error:', errorData);
+                throw new Error(`Failed to save progress: ${response.status}`);
+            }
+
+            // Redirect on success
+            console.log('Progress saved successfully');
+            toast({
+                title: "Success",
+                description: "Progress saved successfully!",
             })
-            router.push(`/projects/${encodeURIComponent(projectName || '')}`)
+            router.push(`/projects/${encodeURIComponent(projectName || '')}`);
         } catch (error) {
-            console.error('Error saving progress:', error)
+            console.error('Error saving progress:', error);
+            toast({
+                title: "Error",
+                description: "Error saving progress. Please try again.",
+                variant: "destructive",
+            })
         }
     }
 
