@@ -90,3 +90,107 @@ export interface Report {
     fileUrl: string;
     summary: string;
 }
+
+export interface Tender {
+    title: string;
+    description: string;
+    dueDate: string;
+    currentBid: string;
+    bidStartDate: string;
+    bidEndDate: string;
+    tenderID: string;
+    imageUrl: string;
+    basicDetails: BasicDetails;
+    paymentInstruments: PaymentInstrument[];
+    tenderDocuments: TenderDocument[];
+    WorkItemDetails: WorkItemDetails;
+    TenderFeeDetails: TenderFeeDetails;
+    EMDFeeDetails: EMDFeeDetails;
+    CriticalDates: CriticalDates;
+    coversInformation: CoverInformation[];
+    tenderInvitingAuthority: TenderInvitingAuthority;
+}
+
+export interface BasicDetails {
+    tenderType: string;
+    tenderID: string;
+    tenderReferenceNumber: string;
+    organizationChain: string;
+    tenderCategory: string;
+    withdrawalAllowed: string;
+    formOfContract: string;
+    cover_no: number;
+    general_technical_evaluation_allowed: string;
+    itemwise_technical_evaluation_allowed: string;
+    paymentMode: string;
+    is_Multicurrency_BOQ: string;
+    is_Multicurrecy_fee: string;
+    allow_two_stage_bidding: string;
+}
+
+export interface PaymentInstrument {
+    paymentMode: string;
+    instrumentType: string;
+}
+
+export interface TenderDocument {
+    documentName: string;
+    documentSize: string;
+}
+
+export interface WorkItemDetails {
+    Title: string;
+    WorkDescription: string;
+    TenderValue: number;
+    ProductCategory: string;
+    NDA_PreQualification: string;
+    ContractType: string;
+    BidValidity: number;
+    IndependentExternalMonitorRemarks: string;
+    SubCategory: string;
+    PeriodOfWorkDays: number;
+    Location: string;
+    Pincode: number;
+    PreBidMeetingPlace: string;
+    PreBidMeetingAddress: string;
+    PreBidMeetingDate: string;
+    BidOpeningPlace: string;
+    ShouldAllowNDATender: string;
+    AllowPreferentialBidder: string;
+}
+
+export interface TenderFeeDetails {
+    TenderFee: number;
+    FeePayableTo: string;
+    TenderFeeExemptionAllowed: string;
+}
+
+export interface EMDFeeDetails {
+    EMDAmount: number;
+    EMDFeeType: string;
+    EMDPercentage: number;
+    EMDExemptionAllowed: string;
+    EMDPayableTo: string;
+    EMDPayableAt: string;
+}
+
+export interface CriticalDates {
+    PublishedDate: string;
+    DocumentDownloadSaleStartDate: string;
+    DocumentDownloadSaleEndDate: string;
+    BidSubmissionStartDate: string;
+    BidSubmissionEndDate: string;
+    BidOpeningDate: string;
+    ClarificationStartDate: string;
+    ClarificationEndDate: string;
+}
+
+export interface CoverInformation {
+    coverName: string;
+    coverType: string;
+}
+
+export interface TenderInvitingAuthority {
+    name: string;
+    address: string;
+}

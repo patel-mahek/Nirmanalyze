@@ -43,6 +43,7 @@ client = AsyncIOMotorClient(MONGO_URL)
 
 db = client.get_database("backend")
 projects_collection = db["projects"]
+tenders_collection = db["tenders"]
 
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -126,6 +127,15 @@ async def get_all_projects():
         projects.append(project)
     return projects
 
+@app.get("/tenders")
+async def get_all_tenders():
+    tenders_cursor = tenders_collection.find({})
+    tenders = []
+    async for tender in tenders_cursor:
+        tender["_id"] = str(tender["_id"])
+        tenders.append(tender)
+    return tenders
+
 @app.get("/project")
 async def get_project_by_name(project_name: str):
     project = await projects_collection.find_one({"projectName": project_name})
@@ -133,6 +143,15 @@ async def get_project_by_name(project_name: str):
         raise HTTPException(status_code=404, detail="Project not found")
     project["_id"] = str(project["_id"])
     return project
+
+@app.get("/tender")
+async def get_tender_by_name(tenderID: str):
+    tender = await tenders_collection.find_one({"tenderID": tenderID})
+    if not tender:
+        raise HTTPException(status_code=404, detail="tender not found")
+    tender["_id"] = str(tender["_id"])
+    return tender
+
 
 @app.put("/project/details")
 async def update_project_details(
