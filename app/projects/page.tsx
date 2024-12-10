@@ -115,10 +115,10 @@ const Projects: React.FC = () => {
                                         Projects
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
+                                {/* <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
                                     <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                </BreadcrumbItem>
+                                </BreadcrumbItem> */}
                             </BreadcrumbList>
                         </Breadcrumb>
                     </div>

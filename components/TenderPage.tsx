@@ -1,50 +1,24 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { fetchAllTenders } from "@/utils/api"
 import { Tender } from "@/interfaces/project"
-
-const searchOptions = [
-    "Tender Type",
-    "Tender ID",
-    "Tender Reference No",
-    "Work Title",
-    "Tender Category",
-    "Product Category",
-    "Organization",
-    "Department",
-    "Division",
-    "Sub Division",
-    "Form of Contract",
-    "Pincode",
-    "Payment Mode",
-    "Value Criteria",
-    "Date Criteria"
-]
+import { TenderSearch } from "./TenderSearch"
 
 export default function TenderPage() {
-    const [searchOption, setSearchOption] = useState("Tender ID")
-    const [searchQuery, setSearchQuery] = useState("")
     const [tenders, setTenders] = useState<Tender[]>([]);
     const [loading, setLoading] = useState(true)
+    const [filteredTenders, setFilteredTenders] = useState<Tender[]>([])
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const data = await fetchAllTenders();
                 setTenders(data);
+                setFilteredTenders(data);
             } catch (error) {
                 console.error("Error fetching tenders:", error);
             } finally {
@@ -55,18 +29,104 @@ export default function TenderPage() {
         fetchData();
     }, []);
 
+    const handleSearch = (filters: any) => {
+        let filtered = [...tenders]
+
+        // Apply filters
+        if (filters.tenderType) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.tenderType.toLowerCase() === filters.tenderType.toLowerCase()
+            )
+        }
+
+        if (filters.tenderID) {
+            filtered = filtered.filter(tender =>
+                tender.tenderID.toLowerCase().includes(filters.tenderID.toLowerCase())
+            )
+        }
+
+        if (filters.tenderReferenceNo) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.tenderReferenceNumber.toLowerCase().includes(filters.tenderReferenceNo.toLowerCase())
+            )
+        }
+
+        if (filters.workTitle) {
+            filtered = filtered.filter(tender =>
+                tender.WorkItemDetails.Title.toLowerCase().includes(filters.workTitle.toLowerCase())
+            )
+        }
+
+        if (filters.tenderCategory) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.tenderCategory.toLowerCase() === filters.tenderCategory.toLowerCase()
+            )
+        }
+
+        if (filters.productCategory) {
+            filtered = filtered.filter(tender =>
+                tender.WorkItemDetails.ProductCategory.toLowerCase() === filters.productCategory.toLowerCase()
+            )
+        }
+
+        if (filters.organization) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.organizationChain.toLowerCase().includes(filters.organization.toLowerCase())
+            )
+        }
+
+        if (filters.pincode) {
+            filtered = filtered.filter(tender =>
+                tender.WorkItemDetails.Pincode.toString() === filters.pincode
+            )
+        }
+
+        if (filters.paymentMode) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.paymentMode.toLowerCase() === filters.paymentMode.toLowerCase()
+            )
+        }
+
+        if (filters.dateCriteria) {
+            const searchDate = new Date(filters.dateCriteria)
+            filtered = filtered.filter(tender => {
+                const tenderDate = new Date(tender.dueDate)
+                return tenderDate >= searchDate
+            })
+        }
+
+        // Apply checkbox filters
+        if (filters.twoStageBidding) {
+            filtered = filtered.filter(tender =>
+                tender.basicDetails.allow_two_stage_bidding === "Yes"
+            )
+        }
+
+        if (filters.ndaTenders) {
+            filtered = filtered.filter(tender =>
+                tender.WorkItemDetails.ShouldAllowNDATender === "Yes"
+            )
+        }
+
+        if (filters.preferentialBidding) {
+            filtered = filtered.filter(tender =>
+                tender.WorkItemDetails.AllowPreferentialBidder === "Yes"
+            )
+        }
+
+        setFilteredTenders(filtered)
+    }
+
+
+
 
     if (loading) return <p>Loading...</p>;
-    // const filteredTenders = tenders.filter(tender => {
-    //     const searchValue = tender[searchOption.toLowerCase().replace(/\s/g, '')] || ''
-    //     return searchValue.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    // })
 
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="border-b bg-white">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                    <h1 className="text-xl font-semibold">Tender Management System</h1>
+                    <h1 className="text-xl font-semibold">Tender Marketplace</h1>
                     {/* <div className="flex w-2/3 items-center gap-2">
                         <Link href="/search" className="w-full">
                             <Button className="w-full flex justify-between px-4">
@@ -79,16 +139,16 @@ export default function TenderPage() {
             </header>
 
             <main className="container mx-auto px-4 py-8">
-                <div className="mb-6 flex items-center justify-between">
+                {/* <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-lg font-semibold">Tenders Under Review</h2>
                     <div className="flex gap-2">
                         <Button variant="outline">Filter</Button>
                         <Button variant="outline">Sort</Button>
-                    </div>
-                </div>
-
+                    </div> 
+                </div> */}
+                <TenderSearch onSearch={handleSearch} />
                 <div className="grid gap-4">
-                    {tenders.map((tender) => (
+                    {filteredTenders.map((tender) => (
                         <Card key={tender.tenderID}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-base font-medium">

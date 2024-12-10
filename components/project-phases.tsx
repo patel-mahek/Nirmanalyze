@@ -5,7 +5,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
-import { ProjectProgress, Phase, Activity, SubActivity, Image } from '@/interfaces/project'
+import { ProjectProgress, Phase, Activity, SubActivity } from '@/interfaces/project'
 
 function RadialProgressCard({ phase, onClick }: { phase: Phase; onClick: () => void }) {
     return (
@@ -73,7 +73,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <img src={activity?.subActivities[0]?.images[0]?.url} alt={activity.activityName} className="w-full h-48 rounded-md object-cover" />
+                            <img src={activity?.subActivities[0]?.images[0]} alt={activity.activityName} className="w-full h-48 rounded-md object-cover" />
                             <Progress value={activity.status} className="w-full" />
                             <p className="text-xs text-muted-foreground">{activity.subActivities.at(-1)?.date}</p>
                         </div>
@@ -86,24 +86,41 @@ function ActivityCard({ activity }: { activity: Activity }) {
                 </DialogHeader>
                 <ScrollArea className="max-h-[80vh] pr-4">
                     <div className="space-y-8">
-                        {activity.subActivities.map((section, index) => (
+                        {activity.subActivities.map((subActivity, index) => (
                             <div key={index} className="space-y-4">
-                                <h3 className="text-lg font-semibold">Dated - {section.date}</h3>
+                                <h3 className="text-lg font-semibold">Dated - {subActivity.date}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {section.images.map((image, imgIndex) => (
-                                        <img key={imgIndex} src={image.url} alt={`${section.date} - Image ${imgIndex + 1}`} className="w-full h-48 rounded-md object-cover" />
+                                    {subActivity.images.map((image, imgIndex) => (
+                                        <img key={imgIndex} src={image} alt={`${subActivity.date} - Image ${imgIndex + 1}`} className="w-full h-48 rounded-md object-cover" />
                                     ))}
                                 </div>
-                                <p className="text-sm">{section.subactivity_description}</p>
+                                <p className="text-sm">{subActivity.subactivity_description_reasoning}</p>
+                                <p><strong>Status:</strong> {subActivity.subactivity_status_impact}%</p>
+                                <p><strong>Impact on Activity:</strong> {subActivity.activity_status_impact}%</p>
+                                <p><strong>Impact on Phase:</strong> {subActivity.phase_status_impact}%</p>
+                                <p><strong>Comments on Phase:</strong> {subActivity.phase_comments_reasoning}</p>
+                                <p><strong>Comments on Activity:</strong> {subActivity.activity_comments_reasoning}</p>
+                                {/* <p><strong>Comments on Subactivity:</strong> {subActivity.subactivity_description_reasoning}</p> */}
+                                {subActivity.warningDescription_conflicts && (
+                                    <p className="text-red-500"><strong>Warning:</strong> {subActivity.warningDescription_conflicts}</p>
+                                )}
+                                <div>
+                                    <h3 className="text-lg font-semibold">Status Changes</h3>
+                                    <ul className="list-disc pl-5">
+                                        {subActivity.additional_comments?.map((comment) => (
+                                            <li>{comment}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                                 <div className="flex flex-wrap gap-4 text-sm">
                                     {/* <div>
                                         <span className="font-medium">Subactivity Status:</span> {section.subActivityStatus}% Complete
                                     </div> */}
                                     <div>
-                                        <span className="font-medium">Start Location:</span> {section.startLatitude}, {section.startLongitude}
+                                        <span className="font-medium">Start Location:</span> {subActivity.startLatitude}, {subActivity.startLongitude}
                                     </div>
                                     <div>
-                                        <span className="font-medium">End Location:</span> {section.endLatitude}, {section.endLongitude}
+                                        <span className="font-medium">End Location:</span> {subActivity.endLatitude}, {subActivity.endLongitude}
                                     </div>
 
                                 </div>

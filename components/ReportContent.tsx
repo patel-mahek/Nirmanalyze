@@ -242,23 +242,32 @@ export default function ReportContent({ data }: { data: Project }) {
                                         {activity.subActivities.map((subActivity, subActivityIndex) => (
                                             <Card key={subActivityIndex} className="mt-4">
                                                 <CardHeader>
-                                                    <CardTitle>{subActivity.subactivity_description}</CardTitle>
+                                                    <CardTitle>{subActivity.subactivity_description_reasoning}</CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
-                                                    <p><strong>Status:</strong> {subActivity.subactivity_status}%</p>
-                                                    <p><strong>Activity Impact:</strong> {subActivity.activity_status}%</p>
-                                                    <p><strong>Phase Impact:</strong> {subActivity.phase_status}%</p>
-                                                    <p><strong>Phase Comments:</strong> {subActivity.phase_comments}</p>
-                                                    <p><strong>Activity Comments:</strong> {subActivity.activity_comments}</p>
-                                                    {subActivity.showWarning && (
-                                                        <p className="text-red-500"><strong>Warning:</strong> {subActivity.warningDescription}</p>
+                                                    <p><strong>Status:</strong> {subActivity.subactivity_status_impact}%</p>
+                                                    <p><strong>Impact on Activity:</strong> {subActivity.activity_status_impact}%</p>
+                                                    <p><strong>Impact on Phase:</strong> {subActivity.phase_status_impact}%</p>
+                                                    <p><strong>Comments on Phase:</strong> {subActivity.phase_comments_reasoning}</p>
+                                                    <p><strong>Comments on Activity:</strong> {subActivity.activity_comments_reasoning}</p>
+                                                    {/* <p><strong>Comments on Subactivity:</strong> {subActivity.subactivity_description_reasoning}</p> */}
+                                                    {subActivity.warningDescription_conflicts && (
+                                                        <p className="text-red-500"><strong>Warning:</strong> {subActivity.warningDescription_conflicts}</p>
                                                     )}
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold">Status Changes</h3>
+                                                        <ul className="list-disc pl-5">
+                                                            {subActivity.additional_comments.map((comment) => (
+                                                                <li>{comment}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
                                                     <p><strong>Date:</strong> {subActivity.date}</p>
                                                     <div className="mt-4 grid grid-cols-2 gap-4">
                                                         {subActivity.images.map((image, imageIndex) => (
                                                             <div key={imageIndex}>
                                                                 <Image
-                                                                    src={image.url}
+                                                                    src={image}
                                                                     alt={`Construction progress ${imageIndex + 1}`}
                                                                     width={300}
                                                                     height={200}
@@ -267,6 +276,7 @@ export default function ReportContent({ data }: { data: Project }) {
                                                             </div>
                                                         ))}
                                                     </div>
+
                                                 </CardContent>
                                             </Card>
                                         ))}
